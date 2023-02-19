@@ -16,11 +16,11 @@ conda create --name kefat --file requirements.txt
 ## Usage
 
 #### 1. Dataset preparation
-Put your raw csvfile(`DATASET_NAME.csv`) in `dataset/raw/` folder.
+Put your raw csvfile(`DATASET_NAME.csv`) in `dataset/raw/`.
 ```
 python molnetdata.py --moldata DATASET_NAME --task clas --ncpu 10
 ```
-This will save the processed dataset in `dataset/processed/` folder.
+This will save the processed dataset in `dataset/processed/`.
 
 #### 2. Training
 ```
@@ -43,7 +43,7 @@ python run.py --mode train \
                --D 4 \
                --disw 1.5 
 ```
-This will save the resulting model in `log/checkpoint/`
+This will save the resulting model in `log/checkpoint/`.
 
 #### 3. Testing
 ```
@@ -60,7 +60,7 @@ python run.py --mode test \
                --disw 1.5 \
                --pretrain log/checkpoint/XXXX.pkl
 ```
-This will load the model in `log/checkpoint/` to make predictions and the results are saved in `log/`
+This will load the model in `log/checkpoint/` to make predictions and the results are saved in `log/`.
 
 #### 3. Hyper-parameter searching
 ```
