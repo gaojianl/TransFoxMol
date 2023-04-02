@@ -4,10 +4,8 @@
 
 
 This is a Pytorch implementation of the following paper: 
+TransFoxMol: Perceiving Chemical Structure with Focused Attention
 
- 
-
-If you make use of the code/experiment in your work, please cite our paper.
 
 ## Installation
 You can just execute following command to create the conda environment.
