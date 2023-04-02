@@ -10,6 +10,7 @@ class Embed(nn.Module):
     def __init__(self, attn_head=4, output_dim=128, d_k=64, d_v=64, attn_layers=4, dropout=0.1, disw=1.5, device='cuda:0'):
         super(Embed, self).__init__()
         self.device = device 
+        self.n_heads = attn_head
         self.relu = nn.ReLU()         
         self.disw = disw
         self.layer_num = attn_layers 
@@ -33,7 +34,7 @@ class Embed(nn.Module):
             dis_ = torch.where(dis_ == self.disw, torch.zeros_like(dis_), dis_)
             matrix = torch.where(adj_ == 0, dis_, adj_)
             matrix_pad[i, :int(l[0]), :int(l[0])] = matrix
-        matrix_pad = matrix_pad.to(self.device)
+        matrix_pad = matrix_pad.unsqueeze(1).repeat(1, self.n_heads, 1, 1).to(self.device)
 
         x_batch = self.tfs[0](x_batch, mask, matrix_pad)
         for i in range(1, self.layer_num):
@@ -124,9 +125,6 @@ class MultiHeadAttention(nn.Module):
         K = self.W_K(input_K).view(batch_size, -1, self.n_heads, self.d_k).transpose(1,2)  
         V = self.W_V(input_V).view(batch_size, -1, self.n_heads, self.d_v).transpose(1,2)
         attn_mask = attn_mask.unsqueeze(1).repeat(1, self.n_heads, 1, 1)      
-
-        if len(matrix.size()) == 3:
-            matrix = matrix.unsqueeze(1).repeat(1, self.n_heads, 1, 1)    
 
         context = self.sdpa(Q, K, V, attn_mask, matrix)
         context = context.transpose(1, 2).reshape(batch_size, -1, self.n_heads * self.d_v)
