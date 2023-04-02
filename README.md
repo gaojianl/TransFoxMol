@@ -1,4 +1,4 @@
-# KEFAT: 
+# TransFoxMol: 
 
 This is a Pytorch implementation of the following paper: 
 
@@ -10,7 +10,7 @@ If you make use of the code/experiment in your work, please cite our paper.
 ## Installation
 You can just execute following command to create the conda environment.
 '''
-conda create --name kefat --file requirements.txt
+conda create --name TFM --file requirements.txt
 '''
 
 ## Usage
