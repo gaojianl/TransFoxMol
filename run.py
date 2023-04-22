@@ -30,7 +30,7 @@ def training(model, train_loader, optimizer, loss_f, metric, task, device, mean,
                 y = data.y.to(device)
                 logits = model(data)
                 
-                loss = loss_f(logits.squeeze(), y)
+                loss = loss_f(logits.squeeze(), y.squeeze())
                 loss_record += float(loss.item())
                 record_count += 1
                 optimizer.zero_grad()
@@ -44,22 +44,23 @@ def training(model, train_loader, optimizer, loss_f, metric, task, device, mean,
         acc, f1, pre, rec, auc = metric(clas.squeeze().numpy(), preds.squeeze().numpy(), tars.squeeze().numpy())
     else:
         for data in train_loader:
-            y = data.y.to(device)
-            
-            y_ = (y - mean) / (stds+1e-5)
-            logits = model(data)
-            
-            loss = loss_f(logits.squeeze(), y_)
-            loss_record += float(loss.item())
-            record_count += 1
-            optimizer.zero_grad()
-            loss.backward()
-            nn.utils.clip_grad_value_(model.parameters(), clip_value=2)
-            optimizer.step()
+            if data.y.size()[0] > 1:
+                y = data.y.to(device)
+                
+                y_ = (y - mean) / (stds+1e-5)
+                logits = model(data)
+                
+                loss = loss_f(logits.squeeze(), y_.squeeze())
+                loss_record += float(loss.item())
+                record_count += 1
+                optimizer.zero_grad()
+                loss.backward()
+                nn.utils.clip_grad_value_(model.parameters(), clip_value=2)
+                optimizer.step()
 
-            pred = logits.detach().cpu()
-            pred = pred*stds+mean
-            preds = torch.cat([preds, pred], 0); tars = torch.cat([tars, y.cpu()], 0)
+                pred = logits.detach().cpu()
+                pred = pred*stds+mean
+                preds = torch.cat([preds, pred], 0); tars = torch.cat([tars, y.cpu()], 0)
         acc, f1, pre, rec, auc = metric(preds.squeeze().numpy(), tars.squeeze().numpy())
 
     epoch_loss = loss_record / record_count
@@ -77,7 +78,7 @@ def testing(model, test_loader, loss_f, metric, task, device, mean, stds, resu):
                     y = data.y.to(device)
                     logits = model(data)
                     
-                    loss = loss_f(logits.squeeze(), y)
+                    loss = loss_f(logits.squeeze(), y.squeeze())
                     loss_record += float(loss.item())
                     record_count += 1
 
@@ -87,18 +88,19 @@ def testing(model, test_loader, loss_f, metric, task, device, mean, stds, resu):
             acc, f1, pre, rec, auc = metric(clas.squeeze().numpy(), preds.squeeze().numpy(), tars.squeeze().numpy())
         else:
             for data in test_loader:
-                y = data.y.to(device)
+                if data.y.size()[0] > 1:
+                    y = data.y.to(device)
 
-                y_ = (y - mean) / (stds+1e-5)
-                logits = model(data)
-                
-                loss = loss_f(logits.squeeze(), y_)
-                loss_record += float(loss.item())
-                record_count += 1
+                    y_ = (y - mean) / (stds+1e-5)
+                    logits = model(data)
+                    
+                    loss = loss_f(logits.squeeze(), y_.squeeze())
+                    loss_record += float(loss.item())
+                    record_count += 1
 
-                pred = logits.detach().cpu()
-                pred = pred*stds+mean
-                preds = torch.cat([preds, pred], 0); tars = torch.cat([tars, y.cpu()], 0)
+                    pred = logits.detach().cpu()
+                    pred = pred*stds+mean
+                    preds = torch.cat([preds, pred], 0); tars = torch.cat([tars, y.cpu()], 0)
             acc, f1, pre, rec, auc = metric(preds.squeeze().numpy(), tars.squeeze().numpy())
 
     epoch_loss = loss_record / record_count
@@ -258,18 +260,18 @@ if __name__ == '__main__':
     parser.add_argument('--device', type=str, default='cuda:0', help='Which gpu to use if any (default: cuda:0)')
     parser.add_argument('--batch_size', type=int, default=32, help='Input batch size for training (default: 32)')
     parser.add_argument('--train_epoch', type=int, default=50, help='Number of epochs to train (default: 50)')
-    parser.add_argument('--lr', type=float, default=0.0005, help='learning rate (default: 0.0005)')
+    parser.add_argument('--lr', type=float, default=0.0005, help='learning rate')
     parser.add_argument('--valrate', type=float, default=0.1, help='valid rate (default: 0.1)')
     parser.add_argument('--testrate', type=float, default=0.1, help='test rate (default: 0.1)')
     parser.add_argument('--fold', type=int, default=3, help='Number of folds for cross validation (default: 3)')
-    parser.add_argument('--dropout', type=float, default=0.05, help='dropout ratio (default: 0.05)')
+    parser.add_argument('--dropout', type=float, default=0.05, help='dropout ratio')
     parser.add_argument('--scaffold', type =str, default=True, help = "True: random scaffold dataset split; False: random dataset split (default: True)")
-    parser.add_argument('--attn_head', type = int, default=6, help = "Number of attention heads for transformer (default: 6)")
-    parser.add_argument('--attn_layers', type=int, default=2, help='Number of GNN message passing layers (default: 5).')
-    parser.add_argument('--output_dim', type=int, default=256, help='Hidden size of embedding layer (default: 256)')
-    parser.add_argument('--D', type=int, default=4, help='Hidden size of readout layer (default: 4)')
-    parser.add_argument('--seed', type=int, help = "Seed for splitting the dataset.")
-    parser.add_argument('--metric', type=str, default='rmse', choices=['rmse', 'mae'], help='Metric to evaluate the regression performance (default: rmse)')
+    parser.add_argument('--attn_head', type = int, default=6, help = "Number of attention heads for transformer")
+    parser.add_argument('--attn_layers', type=int, default=2, help='Number of GNN message passing layers')
+    parser.add_argument('--output_dim', type=int, default=256, help='Hidden size of embedding layer')
+    parser.add_argument('--D', type=int, default=4, help='Hidden size of readout layer')
+    parser.add_argument('--seed', type=int, help = "Seed for splitting the dataset")
+    parser.add_argument('--metric', type=str, choices=['rmse', 'mae'], help='Metric to evaluate the regression performance')
     args = parser.parse_args()
 
     device = torch.device(args.device)
