@@ -111,8 +111,8 @@ def smiletopyg(smi):
                         conj = True
                         break
                 if conj:
-                    adj_order_matrix[i, j] = 1.1
-                    adj_order_matrix[j, i] = 1.1
+                    adj_order_matrix[i, j] = 1.2
+                    adj_order_matrix[j, i] = 1.2
                 else:
                     path = paths[0]
                     dis_order_matrix[i, j] = len(path) - 1
