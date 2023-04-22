@@ -30,6 +30,7 @@ class Embed(nn.Module):
         matrix_pad = torch.zeros((batch_size, max_len, max_len))
         for i, l in enumerate(leng):
             adj_ = torch.FloatTensor(adj[i]); dis_ = torch.FloatTensor(dis[i])
+            adj_ = torch.where(adj_==1.2, torch.full_like(adj_, 1.1), adj_)
             dis_ = 1 / torch.pow(self.disw, (dis_ - 1))
             dis_ = torch.where(dis_ == self.disw, torch.zeros_like(dis_), dis_)
             matrix = torch.where(adj_ == 0, dis_, adj_)
