@@ -67,7 +67,7 @@ class metrics_c(nn.Module):
                 auc_ = self.auc_f(tar[:, i], prob[:, i])
                 
                 acc.append(acc_); f1.append(f1_); pre.append(pre_); rec.append(rec_); auc.append(auc_)
-            return np.mean(acc), np.mean(f1), np.mean(pre), np.mean(rec), np.nanmean(auc)
+            return np.mean(acc), np.mean(f1), np.mean(pre), np.mean(rec), np.mean(auc)
         else:
             acc = self.acc_f(tar, out)
             f1 = self.f1_f(tar, out)
