@@ -271,6 +271,7 @@ if __name__ == '__main__':
     parser.add_argument('--output_dim', type=int, default=256, help='Hidden size of embedding layer')
     parser.add_argument('--D', type=int, default=4, help='Hidden size of readout layer')
     parser.add_argument('--seed', type=int, help = "Seed for splitting the dataset")
+    parser.add_argument('--pretrain', type=str, help = "Path of retrained weights")
     parser.add_argument('--metric', type=str, choices=['rmse', 'mae'], help='Metric to evaluate the regression performance')
     args = parser.parse_args()
 
