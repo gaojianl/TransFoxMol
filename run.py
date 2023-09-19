@@ -367,7 +367,8 @@ if __name__ == '__main__':
             'batch_size': batch_size
             }
         best = fmin(fn=psearch, space=parm_space, algo=hyperopt.tpe.suggest, max_evals=100, trials=trials, early_stop_fn=no_progress_loss(50))
-        logger.info('Dataset {} Best Params: {}'.format(moldata, best))
+        best_values = {k: param_mappings[k][v] if k in param_mappings else v for k, v in best.items()}
+        logger.info('Dataset {} Best Params: {}'.format(moldata, best_values))
         ys = [t['result']['loss'] for t in trials.trials]
         logger.info('Dataset {} Hyperopt Results: {}'.format(moldata, ys))
 
