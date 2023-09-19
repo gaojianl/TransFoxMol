@@ -366,6 +366,14 @@ if __name__ == '__main__':
             'D': hp.choice('D', [2, 4, 6, 8, 12, 16]),
             'batch_size': batch_size
             }
+        param_mappings = {
+            'attn_head': [4, 6, 8, 10],
+            'output_dim': [128, 256],
+            'attn_layers': [1, 2, 3, 4],
+            'dropout': [0.05, 0.1],
+            'lr': lrs,  # Placeholder for lr values. Please replace with actual values before running.
+            'D': [2, 4, 6, 8, 12, 16]
+            }
         best = fmin(fn=psearch, space=parm_space, algo=hyperopt.tpe.suggest, max_evals=100, trials=trials, early_stop_fn=no_progress_loss(50))
         best_values = {k: param_mappings[k][v] if k in param_mappings else v for k, v in best.items()}
         logger.info('Dataset {} Best Params: {}'.format(moldata, best_values))
