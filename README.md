@@ -36,7 +36,7 @@ python run.py train DATASET_NAME \
                --batch_size 32 \
                --train_epoch 50 \
                --lr 0.0005 \
-               --valrate 0.1 
+               --valrate 0.1 \
                --testrate 0.1 \
                --seed 426 \
                --fold 3 \
