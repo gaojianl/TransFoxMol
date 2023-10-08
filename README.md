@@ -24,7 +24,7 @@ This will save the processed dataset in `dataset/processed/`.
 
 #### 2. Hyper-parameter searching
 ```
-python run.py search DATASET_NAME --task clas --device cuda:0 --metric auc
+python run.py search DATASET_NAME --task clas --device cuda:0
 ```
 This will return the best hyper-params.
 
