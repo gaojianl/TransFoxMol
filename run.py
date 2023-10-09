@@ -320,10 +320,10 @@ if __name__ == '__main__':
             labell = ['p_np']
         else:pass
     else:
+        mean, std = 0, 1
         task = args.task
         if args.task == 'reg':
             labell = ['standard_value']
-            mean, std = 0, 1
         else:
             numtasks = 1
             labell = ['label']
