@@ -77,7 +77,7 @@ class metrics_c(nn.Module):
             pre = self.pre_f(tar, out)
             rec = self.rec_f(tar, out)
             auc = self.auc_f(tar, prob)
-        return acc, f1, pre, rec, auc
+            return acc, f1, pre, rec, auc
 
 
 class metrics_r(nn.Module):
