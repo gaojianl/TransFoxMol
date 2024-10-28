@@ -7,6 +7,8 @@ This is a Pytorch implementation of the following paper:
 
 Jian Gao, Zheyuan Shen, Yufeng Xie, Jialiang Lu, Yang Lu, Sikang Chen, Qingyu Bian, Yue Guo, Liteng Shen, Jian Wu, Binbin Zhou, Tingjun Hou, Qiaojun He, Jinxin Che, Xiaowu Dong, TransFoxMol: predicting molecular property with focused attention, Briefings in Bioinformatics, Volume 24, Issue 5, September 2023, bbad306, https://doi.org/10.1093/bib/bbad306
 
+## The upgraded version of this model, KnoMol, is available at https://github.com/gaojianl/KnoMol
+
 ## Installation
 You can just execute following command to create the conda environment.
 '''
